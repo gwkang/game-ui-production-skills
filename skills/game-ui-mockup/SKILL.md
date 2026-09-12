@@ -12,6 +12,7 @@ Create full-screen visual candidates from approved direction and screen truth. A
 ## Required inputs
 
 - Approved `game-ui-art-direction` and `game-ui-screen-spec` artifacts.
+- The screen specification's approved component binding inventory. For every `reuse:<componentId>@<version>` entry, require its catalog artifact fingerprint, consumer, allowed instance inputs, protected properties, required states, canonical representation, and declared evidence capability.
 - Current and superseded references, each labeled by role.
 - Representative content, states, target viewports, safe areas, and text-fit cases named by the screen specification.
 - The protected content lock, including reproducible locators and hashes for content that must remain exact.
@@ -34,6 +35,26 @@ Produce two distinct artifact types when generation is required:
 
 Only a production-representative composite can receive mockup approval or enter downstream evidence.
 
+### Component reuse fidelity
+
+For every bound reusable component, preserve the catalog identity and version. Apply only the screen-owned instance inputs and placement permitted by the approved binding; catalog-owned protected properties and required states remain exact.
+
+A generated component appearance is never reuse-fidelity evidence. It may explore surrounding visual treatment, but it cannot replace, retouch, average, or approximate the approved canonical representation. A similar helper, screenshot, or visual match is also insufficient unless the catalog declares it as an evidence capability for that exact fingerprint.
+
+For each candidate packet, emit this block in order:
+
+`Component reuse-fidelity matrix`
+
+`binding | catalog artifact fingerprint | consumer | represented states | allowed instance inputs | protected-property evidence | result`
+
+Then emit one row per reusable binding. In `represented states`, name every required state and whether it is represented. In `protected-property evidence`, name every protected property separately and give its evidence locator or explicit missing/drift status; do not collapse untouched or unavailable properties into a summary.
+
+Use only these results:
+
+- `MATCH` — the exact bound identity and fingerprint are current, every required represented state is visible, all protected properties have declared reproducible evidence, and only allowed instance inputs vary.
+- `DRIFT` — evidence exists but a protected property, state, identity, fingerprint, or allowed-input boundary differs. Reject that composite.
+- `BLOCKED` — required binding, fingerprint, canonical representation, state, evidence capability, or protected-property evidence is absent, stale, or conflicting. Do not claim fidelity or select the composite.
+
 - Build prompts and compositions only from approved inputs; label each reference as composition, style, subject, or edit target.
 - Produce exactly the requested candidate count and every target viewport named by the screen specification. Do not infer one target from another.
 - Show one identified representative state per image. A candidate does not prove states it does not show.
@@ -50,15 +71,17 @@ Return one **Mockup candidate packet** containing:
 1. concept path or `concept-not-required`, plus production-representative composite paths and previews
 2. exact prompt or deterministic composition procedure, with reference roles
 3. screen-spec compliance matrix mapping each required region, content family, and represented state to visible evidence
-4. observed defects, rejected candidates, and intentional differences
-5. provenance, hashes, and current/superseded status
-6. one product-owner selection question
+4. component reuse-fidelity matrix for every reusable binding
+5. observed defects, rejected candidates, and intentional differences
+6. provenance, hashes, and current/superseded status
+7. one product-owner selection question
 
 ## Scope boundary
 
 - Do not load a full-screen mockup as a runtime texture or production atlas.
 - Do not create production assets, manifests, scene code, layout code, or invisible input regions.
 - Do not continue into handoff, asset production, implementation, runtime validation, or approval review.
+- Do not create, revise, approve, or version a component catalog from mockup work.
 - Do not treat visual similarity, generation success, or the author's preference as approval.
 
 ## Verification and approval
@@ -67,5 +90,12 @@ Return one **Mockup candidate packet** containing:
 - Reproduce deterministic composites and require identical output hashes.
 - Trace every visible requirement to the approved screen specification; there must be no orphan content or controls.
 - Keep every candidate `DRAFT` until the designated product owner explicitly selects its exact composite hashes.
+
+Stop when a component binding, fingerprint, canonical representation, required state, declared evidence capability, or protected-property evidence is missing, stale, or conflicting. Mark the matrix row `BLOCKED` and return to `game-ui-component-system` before `game-ui-handoff`.
+
+Use this exact recovery handoff:
+
+`Next route: game-ui-component-system`
+`Blocked downstream: game-ui-handoff`
 
 Stop after presenting the candidate packet. Send only explicitly selected production-representative composites to `game-ui-handoff`.

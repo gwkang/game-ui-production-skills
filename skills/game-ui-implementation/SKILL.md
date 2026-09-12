@@ -12,11 +12,45 @@ Implement the approved UI contract without redesigning content, behavior, typogr
 ## Required inputs
 
 - Approved screen specification and handoff.
+- The handoff's current `Component implementation binding matrix`.
 - Product-owner mockup approval bound to exact composite hashes.
-- Asset-readiness packet in an explicit production mode and a matching independent `Decision: APPROVE ASSET QUALITY`.
+- Asset-readiness packet in an explicit production mode and its matching independent asset-review disposition.
+- The asset packet's current `Component production disposition matrix`, binding readiness, and packet readiness.
 - Source-parity records, supported targets, acceptance map, component/state IDs, and current code/data/input/test owners.
 
 Before tests or code, recompute the input locks. Every visible art family must be `new production` or `verified reuse`, with none missing, and target-size evidence must use the intended runtime bytes. Return stale, incomplete, mismatched, or unapproved inputs upstream.
+
+The independent asset-review disposition is `NOT APPLICABLE` only when the packet has no produced or file-backed art. `Decision: APPROVE ASSET QUALITY` remains required when the packet has any produced or file-backed art. In both cases require packet readiness, source parity, and target-size rendered evidence; `NOT APPLICABLE` waives only the nonexistent file-art verdict.
+
+For every reusable binding, require the same catalog identity and `catalog artifact fingerprint` in the handoff, asset packet, and current catalog. The handoff row must be `READY`, the asset binding must be `READY_FOR_IMPLEMENTATION`, and the asset packet must be `READY_FOR_IMPLEMENTATION`. A code-native or native-widget component may be `ASSET_NOT_REQUIRED`, but that never waives binding or packet readiness.
+
+## Component runtime integration contract
+
+Emit one **Component runtime integration matrix**. Immediately before its header, emit this exact plain-text title once, without a Markdown heading marker or decoration:
+
+`Component runtime integration matrix`
+
+Use this exact plain-text header once, with no leading or trailing pipe:
+
+`binding | catalog artifact fingerprint | consumer | implementation target | declared adapter | allowed instance inputs | protected-property evidence | required states | implementation evidence | integration status`
+
+Build every row by this ten-cell recipe. Copy the first eight cells verbatim from the approved handoff `Component implementation binding matrix`: binding, catalog artifact fingerprint, consumer, implementation target, declared adapter, allowed instance inputs, protected-property evidence, and required states. Do not normalize identifiers, remove a `reuse:` prefix, reorder lists, or append notes to copied cells. Put project-declared test, probe, or capability mappings in `implementation evidence`; put only `READY`, `OPEN`, or `BLOCKED` in `integration status`.
+
+- `READY` means the consumer uses the exact declared adapter for the same catalog identity and fingerprint, passes only the allowed instance inputs, preserves every protected property, maps all required states one-to-one, and has focused GREEN evidence.
+- `OPEN` is only an optional internal implementation choice that cannot alter identity, adapter, inputs, protected properties, states, or behavior.
+- `BLOCKED` covers an added or undeclared input, any protected-property override, a substituted or renamed helper, a missing state or probe, a stale fingerprint, or evidence that does not map to the declared catalog capability.
+
+Only the allowed instance inputs may cross the screen-to-component boundary. A generic `style`, `theme`, `skin`, `tint`, `scale`, or similar escape prop is forbidden when it can alter a protected property unless that exact input is explicitly listed as allowed. Local pointer handlers cannot simulate a missing component state. Matching dimensions, passing unrelated tests, similar names, or visual resemblance do not prove that the declared adapter or catalog fingerprint is in use.
+
+Implementation evidence maps protected properties and required states to project-declared tests, probes, or evidence capabilities. It proves integration wiring, not pixels: rendered fidelity remains owned by `game-ui-runtime-validation`.
+
+If implementation would change a binding, representation, declared adapter, allowed input, protected property, required state, or catalog fingerprint, emit these lines exactly once:
+
+`Next route: game-ui-component-system`
+
+`Blocked downstream: game-ui-runtime-validation`
+
+If the handoff matrix is missing, stale, conflicting, or not `READY`, use `Next route: game-ui-handoff`. If the production disposition, binding readiness, or packet readiness is missing or blocked, use `Next route: game-ui-asset-production`. In either case keep `Blocked downstream: game-ui-runtime-validation`.
 
 ## Implementation contract
 
@@ -37,7 +71,7 @@ Maintain an **implementation evidence packet** with:
 
 1. input lock, hashes, approvals, parity records, supported targets, and exclusions
 2. impact map, consumers, shared files, and preserved changes
-3. component integration map: ID, asset/frame, layout, live content, input rectangle, states, and fallback
+3. Component integration map containing the Component runtime integration matrix, plus asset/frame, layout, live content, input rectangle, and fallback ownership
 4. RED evidence: focused command, expected failure, and pre-change output
 5. GREEN implementation: minimal code path and passing focused output
 6. contract preservation before/after for product-owned content and behavior

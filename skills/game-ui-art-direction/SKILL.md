@@ -14,6 +14,7 @@ Define a screen's visual intent and source authority without redesigning product
 - Current user decisions that affect the screen.
 - The project's authoritative product and visual-design documents.
 - Approved screen-specific references and their current or superseded status.
+- The approved component catalog when repeated visual families, claimed reuse, or component drift are in scope.
 - A current runtime capture when diagnosing an existing screen; treat it as evidence, not design authority.
 
 Record unavailable inputs as `OPEN` or `BLOCKED`. Do not infer the project name, genre, platform, runtime, viewport, locale, content, interaction model, or accessibility requirements from common conventions.
@@ -37,10 +38,11 @@ Return one concise **Art-direction brief** with these slots, in order:
 1. **Authority ledger** — current, supporting, superseded, `OPEN`, and `BLOCKED` sources.
 2. **Visual thesis** — the intended player impression in one sentence, or `BLOCKED` when authority is insufficient.
 3. **Shared visual language** — palette roles, materials, contour, lighting, typography, icons, and depth supported by current sources.
-4. **Screen-specific expression** — qualitative hierarchy, mood, density, and distinction.
-5. **Protected invariants** — supplied content, data, navigation, interaction, font, accessibility, and gameplay facts.
-6. **Anti-goals** — concrete inconsistent or unreadable outcomes.
-7. **Open decisions and handoff** — unresolved decisions and the exact inputs needed by `game-ui-screen-spec` and `game-ui-mockup`.
+4. **Component-family decisions** — for every repeated visible family, record exactly `reuse:<componentId>@<version>`, `screen-specific-exception`, `new-family-required`, or `BLOCKED`, with its authority. Similarity alone never establishes reuse.
+5. **Screen-specific expression** — qualitative hierarchy, mood, density, and distinction.
+6. **Protected invariants** — supplied content, data, navigation, interaction, font, accessibility, and gameplay facts.
+7. **Anti-goals** — concrete inconsistent or unreadable outcomes.
+8. **Open decisions and handoff** — unresolved decisions and the exact inputs needed by `game-ui-component-system`, `game-ui-screen-spec`, and `game-ui-mockup`.
 
 ## Scope boundary
 
@@ -48,6 +50,7 @@ Return one concise **Art-direction brief** with these slots, in order:
 - Do not create or modify production assets, code, or runtime layout.
 - Do not invent copy, data, controls, states, fonts, navigation, or accessibility requirements.
 - Do not specify pixel geometry, asset manifests, test matrices, or runtime acceptance results.
+- Do not create, revise, or approve a component catalog; classify the visual-family need and route it to `game-ui-component-system`.
 - Do not continue into mockup, asset production, implementation, or runtime validation in the same response.
 
 ## Verification and approval
@@ -57,4 +60,4 @@ Return one concise **Art-direction brief** with these slots, in order:
 - Confirm no downstream artifact was produced.
 - Keep the brief `DRAFT` until the designated product owner explicitly approves it. The author cannot self-approve or inherit approval from a superseded reference.
 
-Stop after the draft brief. If missing authority prevents a defensible visual thesis, request the smallest product decision or source needed to continue.
+Stop after the draft brief. If a component-family decision is `new-family-required` or `BLOCKED`, route it to `game-ui-component-system` before downstream reuse claims. If missing authority prevents a defensible visual thesis, request the smallest product decision or source needed to continue.

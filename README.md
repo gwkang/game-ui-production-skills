@@ -1,12 +1,13 @@
 # Game UI Production Skills
 
-Nine portable agent skills for taking an existing game's UI from visual direction through independent runtime acceptance. Each skill has one owner and can be installed independently; a project should use only the stages its request actually needs.
+Ten portable agent skills for taking an existing game's UI from visual direction through independent runtime acceptance. Each skill has one owner and can be installed independently; a project should use only the stages its request actually needs.
 
 ## Role chain
 
 | Stage | Skill | Input | Output |
 |---|---|---|---|
 | Direction | `game-ui-art-direction` | Product and visual authority | Approved visual-direction brief |
+| Component governance | `game-ui-component-system` | Approved project profile and repeated-family authority | Versioned catalog decision |
 | Specification | `game-ui-screen-spec` | Approved direction and product contracts | Exact content/state/input/responsive specification |
 | Candidate | `game-ui-mockup` | Approved direction and specification | Selectable production-representative composites |
 | Handoff | `game-ui-handoff` | Selected composite and source locks | Measured ownership and geometry contract |
@@ -18,7 +19,7 @@ Nine portable agent skills for taking an existing game's UI from visual directio
 
 The full chain is:
 
-`art-direction → screen-spec → mockup → handoff → asset-production → art-asset-review → implementation → runtime-validation → acceptance-review`
+`art-direction → [component-system when reuse/new family/drift is in scope] → screen-spec → mockup → handoff → asset-production → art-asset-review → implementation → runtime-validation → acceptance-review`
 
 Do not treat the chain as mandatory ceremony for every UI request. Start at the stage that owns the requested outcome, but satisfy that skill's required inputs. Read-only reviews do not authorize fixes, and approval at one stage does not approve later stages.
 
