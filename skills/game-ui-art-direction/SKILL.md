@@ -3,14 +3,10 @@ name: game-ui-art-direction
 description: Use when an existing game's screen is visually inconsistent, off-brand, or needs an approved visual-direction brief before mockup or production work.
 ---
 
-# Game UI Art Direction
-
-## Overview
-
+## Role
 Define a screen's visual intent and source authority without redesigning product content or performing downstream production work.
 
-## Required inputs
-
+## Inputs
 - Current user decisions that affect the screen.
 - The project's authoritative product and visual-design documents.
 - Approved screen-specific references and their current or superseded status.
@@ -19,45 +15,10 @@ Define a screen's visual intent and source authority without redesigning product
 
 Record unavailable inputs as `OPEN` or `BLOCKED`. Do not infer the project name, genre, platform, runtime, viewport, locale, content, interaction model, or accessibility requirements from common conventions.
 
-## Authority order
+## Work and handoff
+1. Resolve source authority and the intended visual experience; classify reusable family needs.
+2. Use [the detailed output and acceptance rules](references/output-contract.md) for the current stage; preserve exact schema keys and all required approval/coverage gates.
+3. Produce the direction brief only. Keep DRAFT until actual product-owner approval; route family decisions to game-ui-component-system.
 
-Resolve conflicts in this order and record the result:
-
-1. current user decisions that explicitly revise earlier direction
-2. authoritative product and design requirements
-3. current approved screen-specific direction
-4. shared visual language from current canonical references
-5. runtime implementation, used only to inventory the present state and defects
-
-A reference screen can supply shared visual language without becoming a layout or content template. Exclude superseded sources.
-
-## Output contract
-
-Return one concise **Art-direction brief** with these slots, in order:
-
-1. **Authority ledger** — current, supporting, superseded, `OPEN`, and `BLOCKED` sources.
-2. **Visual thesis** — the intended player impression in one sentence, or `BLOCKED` when authority is insufficient.
-3. **Shared visual language** — palette roles, materials, contour, lighting, typography, icons, and depth supported by current sources.
-4. **Component-family decisions** — for every repeated visible family, record exactly `reuse:<componentId>@<version>`, `screen-specific-exception`, `new-family-required`, or `BLOCKED`, with its authority. Similarity alone never establishes reuse.
-5. **Screen-specific expression** — qualitative hierarchy, mood, density, and distinction.
-6. **Protected invariants** — supplied content, data, navigation, interaction, font, accessibility, and gameplay facts.
-7. **Anti-goals** — concrete inconsistent or unreadable outcomes.
-8. **Open decisions and handoff** — unresolved decisions and the exact inputs needed by `game-ui-component-system`, `game-ui-screen-spec`, and `game-ui-mockup`.
-
-## Scope boundary
-
-- Do not generate images or write image-generation prompts.
-- Do not create or modify production assets, code, or runtime layout.
-- Do not invent copy, data, controls, states, fonts, navigation, or accessibility requirements.
-- Do not specify pixel geometry, asset manifests, test matrices, or runtime acceptance results.
-- Do not create, revise, or approve a component catalog; classify the visual-family need and route it to `game-ui-component-system`.
-- Do not continue into mockup, asset production, implementation, or runtime validation in the same response.
-
-## Verification and approval
-
-- Confirm every cited source exists or is explicitly marked `OPEN` or `BLOCKED`.
-- Confirm every output slot is present and each factual statement traces to a listed authority.
-- Confirm no downstream artifact was produced.
-- Keep the brief `DRAFT` until the designated product owner explicitly approves it. The author cannot self-approve or inherit approval from a superseded reference.
-
-Stop after the draft brief. If a component-family decision is `new-family-required` or `BLOCKED`, route it to `game-ui-component-system` before downstream reuse claims. If missing authority prevents a defensible visual thesis, request the smallest product decision or source needed to continue.
+## Verification boundary
+Before checking, fix the selected artifact/revision, criteria, target and permitted repair scope. A separate subagent verifies; the author repairs only returned in-scope defects and the verifier rechecks affected criteria. Preserve valid unaffected evidence. Use the recorded retry budget (default two); block on exhaustion or unavailable independent verification. Defer out-of-scope observations without adding work or gates. Verification reports receive supervisor scope/evidence checks, not recursive reviewer chains.

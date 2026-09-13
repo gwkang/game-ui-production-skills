@@ -3,14 +3,10 @@ name: game-ui-implementation
 description: Use when approved game UI specifications, handoff measurements, and independently reviewed assets are ready for runtime integration.
 ---
 
-# Game UI Implementation
-
-## Overview
-
+## Role
 Implement the approved UI contract without redesigning content, behavior, typography, navigation, or economy. Keep visual, live-data, layout, and input ownership explicit and testable.
 
-## Required inputs
-
+## Inputs
 - Approved screen specification and handoff.
 - The handoff's current `Component implementation binding matrix`.
 - Product-owner mockup approval bound to exact composite hashes.
@@ -24,67 +20,10 @@ The independent asset-review disposition is `NOT APPLICABLE` only when the packe
 
 For every reusable binding, require the same catalog identity and `catalog artifact fingerprint` in the handoff, asset packet, and current catalog. The handoff row must be `READY`, the asset binding must be `READY_FOR_IMPLEMENTATION`, and the asset packet must be `READY_FOR_IMPLEMENTATION`. A code-native or native-widget component may be `ASSET_NOT_REQUIRED`, but that never waives binding or packet readiness.
 
-## Component runtime integration contract
+## Work and handoff
+1. Implement only approved content, geometry, components and reviewed assets; separate live data, layout and input ownership.
+2. Use [the detailed output and acceptance rules](references/output-contract.md) for the current stage; preserve exact schema keys and all required approval/coverage gates.
+3. Return the implementation packet for runtime validation. Do not redesign or claim acceptance from successful compilation.
 
-Emit one **Component runtime integration matrix**. Immediately before its header, emit this exact plain-text title once, without a Markdown heading marker or decoration:
-
-`Component runtime integration matrix`
-
-Use this exact plain-text header once, with no leading or trailing pipe:
-
-`binding | catalog artifact fingerprint | consumer | implementation target | declared adapter | allowed instance inputs | protected-property evidence | required states | implementation evidence | integration status`
-
-Build every row by this ten-cell recipe. Copy the first eight cells verbatim from the approved handoff `Component implementation binding matrix`: binding, catalog artifact fingerprint, consumer, implementation target, declared adapter, allowed instance inputs, protected-property evidence, and required states. Do not normalize identifiers, remove a `reuse:` prefix, reorder lists, or append notes to copied cells. Put project-declared test, probe, or capability mappings in `implementation evidence`; put only `READY`, `OPEN`, or `BLOCKED` in `integration status`.
-
-- `READY` means the consumer uses the exact declared adapter for the same catalog identity and fingerprint, passes only the allowed instance inputs, preserves every protected property, maps all required states one-to-one, and has focused GREEN evidence.
-- `OPEN` is only an optional internal implementation choice that cannot alter identity, adapter, inputs, protected properties, states, or behavior.
-- `BLOCKED` covers an added or undeclared input, any protected-property override, a substituted or renamed helper, a missing state or probe, a stale fingerprint, or evidence that does not map to the declared catalog capability.
-
-Only the allowed instance inputs may cross the screen-to-component boundary. A generic `style`, `theme`, `skin`, `tint`, `scale`, or similar escape prop is forbidden when it can alter a protected property unless that exact input is explicitly listed as allowed. Local pointer handlers cannot simulate a missing component state. Matching dimensions, passing unrelated tests, similar names, or visual resemblance do not prove that the declared adapter or catalog fingerprint is in use.
-
-Implementation evidence maps protected properties and required states to project-declared tests, probes, or evidence capabilities. It proves integration wiring, not pixels: rendered fidelity remains owned by `game-ui-runtime-validation`.
-
-If implementation would change a binding, representation, declared adapter, allowed input, protected property, required state, or catalog fingerprint, emit these lines exactly once:
-
-`Next route: game-ui-component-system`
-
-`Blocked downstream: game-ui-runtime-validation`
-
-If the handoff matrix is missing, stale, conflicting, or not `READY`, use `Next route: game-ui-handoff`. If the production disposition, binding readiness, or packet readiness is missing or blocked, use `Next route: game-ui-asset-production`. In either case keep `Blocked downstream: game-ui-runtime-validation`.
-
-## Implementation contract
-
-Inspect repository impacts and preserve unrelated changes using project-provided tools. For each behavior or layout requirement:
-
-1. add the smallest focused test
-2. run it and record the expected pre-change failure
-3. implement only enough to pass
-4. rerun focused tests before proceeding
-
-Map every component and state to its asset, layout owner, live text/data owner, input owner, states, and fallback. Keep dynamic values live. Use declared intrinsic/visible geometry, anchors, safe areas, and fit modes. A mockup or screenshot is never a runtime hit surface.
-
-Do not change approved copy, content, currency, font, navigation, Back behavior, persistence, availability, or state rules to simplify implementation. Do not use runtime tint, outline, scale, glow, or spacing to conceal missing or mismatched production art.
-
-## Output contract
-
-Maintain an **implementation evidence packet** with:
-
-1. input lock, hashes, approvals, parity records, supported targets, and exclusions
-2. impact map, consumers, shared files, and preserved changes
-3. Component integration map containing the Component runtime integration matrix, plus asset/frame, layout, live content, input rectangle, and fallback ownership
-4. RED evidence: focused command, expected failure, and pre-change output
-5. GREEN implementation: minimal code path and passing focused output
-6. contract preservation before/after for product-owned content and behavior
-7. deviation ledger: zero deviations or exact source, reason, measured effect, owner decision, and approval
-8. changed files, tests, purposes, and commands
-9. open decisions and locked build inputs for `game-ui-runtime-validation`
-
-## Scope and verification
-
-- Do not generate, repair, or compensate for art; return art defects to `game-ui-asset-production`.
-- Do not invent missing geometry, responsive behavior, states, or product facts.
-- Run focused tests for layout, content binding, states, input geometry, navigation, persistence, and approved boundary cases.
-- Confirm every handoff row has a runtime consumer and no extra UI or behavior was introduced.
-- Run project-required test/build/audit commands, but do not claim rendered fidelity before runtime validation.
-
-Stop for missing approval, source parity, measurements, states, assets, or product authority. Stop if work would change an out-of-scope product contract. After GREEN evidence, route the unchanged build to runtime validation.
+## Verification boundary
+Before checking, fix the selected artifact/revision, criteria, target and permitted repair scope. A separate subagent verifies; the author repairs only returned in-scope defects and the verifier rechecks affected criteria. Preserve valid unaffected evidence. Use the recorded retry budget (default two); block on exhaustion or unavailable independent verification. Defer out-of-scope observations without adding work or gates. Verification reports receive supervisor scope/evidence checks, not recursive reviewer chains.

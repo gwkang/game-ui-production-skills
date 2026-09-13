@@ -3,54 +3,19 @@ name: art-asset-review
 description: Use when game UI assets need an independent quality, provenance, target-slot, or composed-screen fidelity verdict before implementation.
 ---
 
-# Art Asset Review
-
-## Overview
-
+## Role
 Independently decide whether production assets and verified reuse meet both technical and composed-screen craft requirements. Review is read-only; the producer cannot approve their own work.
 
-## Required inputs
-
+## Inputs
 - Approved art direction, production-representative mockup, handoff, and asset-readiness packet.
 - Exact source/output hashes, rights, transforms, geometry, target slots, consumers, and production status.
 - Source-parity rows for every visible art family.
 - Target-size composites for every supported target using the exact intended runtime bytes.
 
-## Review contract
+## Work and handoff
+1. Read the locked production/reuse packet and inspect both exact bytes and target-size composed screens.
+2. Use [the detailed output and acceptance rules](references/output-contract.md) for the current stage; preserve exact schema keys and all required approval/coverage gates.
+3. Return the independent verdict and criterion-linked defects to game-ui-asset-production; never repair assets or evidence.
 
-Recompute source parity. Reuse evidence must read the same runtime path and hash as production; new-production evidence must read the exact candidate destined for its declared runtime location. Packet, transform, mockup/QA inputs, consumers, and provenance must agree.
-
-Technical validity is necessary but insufficient. Inspect original pixels, target-slot renders, and the full composed screen against the approved mockup.
-
-For every visible family, record source, reference, target-size evidence, and verdict for:
-
-- material and surface treatment
-- contour and edge finish
-- lighting and shadow logic
-- perspective and volume
-- detail density at actual display size
-- color harmony and contrast hierarchy
-- optical weight across combined families
-
-Separately verify rights, transformations, dimensions, format, alpha bounds, halos, frame bleed, silhouette, color-plus-symbol distinction, aspect, padding, pivot, crop safety, target-slot fit, reproducibility, and production status.
-
-## Output contract
-
-Return one review containing:
-
-1. reviewer identity, excluded roles, and independence statement
-2. source/output hash lock and verified parity rows
-3. technical quality matrix
-4. composed-screen craft quality matrix
-5. target-size comparison for every supported target
-6. findings with severity, owner, and reopen condition
-7. exactly `Decision: APPROVE ASSET QUALITY` or `Decision: REJECT ASSET QUALITY`
-
-Approval requires complete family coverage, rights and technical evidence, verified parity, no missing or unproven reuse, and no open craft-quality finding. Product-owner fidelity approval remains separate; this verdict does not approve implementation or the complete UI.
-
-## Stop conditions
-
-- Reject missing rights, hashes, transforms when bytes changed, geometry, target slots, consumers, visible families, or target-size evidence.
-- Reject substitute assets or evidence produced from bytes different from the declared runtime source.
-- Reject mixed style or a composed-screen loss of approved material, lighting, perspective, detail density, color hierarchy, or optical weight even when isolated assets pass.
-- Do not edit assets, manifests, code, or evidence. Route findings to `game-ui-asset-production`.
+## Verification boundary
+Before checking, fix the selected artifact/revision, criteria, target and permitted repair scope. A separate subagent verifies; the author repairs only returned in-scope defects and the verifier rechecks affected criteria. Preserve valid unaffected evidence. Use the recorded retry budget (default two); block on exhaustion or unavailable independent verification. Defer out-of-scope observations without adding work or gates. Verification reports receive supervisor scope/evidence checks, not recursive reviewer chains.

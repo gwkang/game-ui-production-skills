@@ -2,6 +2,10 @@
 
 Ten portable agent skills for taking an existing game's UI from visual direction through independent runtime acceptance. Each skill has one owner and can be installed independently; a project should use only the stages its request actually needs.
 
+## Current contract layout
+
+Each SKILL.md contains the role, inputs and handoff. Read its references/output-contract.md for exact output, approval, coverage and recovery rules. Validation uses a separate subagent, frozen criteria and bounded author-repair/verifier-recheck; out-of-scope observations do not create tasks or gates. Historical verification snapshots remain tied to their original source hashes.
+
 ## Role chain
 
 | Stage | Skill | Input | Output |
